@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const db = require("mysql2/promise");
 require("dotenv").config();
 
 // Логируем переменные, чтобы убедиться, что они загружаются
