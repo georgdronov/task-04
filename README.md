@@ -21,20 +21,20 @@ Tech:
 
 _Start container:_
 
-```
+```bash
 docker-compose up -d
 ```
 
 _If Docker have problems with port_
 
-```
+```PowerShell
 netstat -ano | findstr :3306
 taskkill /PID <PID> /F
 ```
 
 _Connect to DB in container:_
 
-```
+```bash
 docker exec -it user-management-mysql mysql -uroot -p1234
 ```
 
@@ -47,3 +47,4 @@ docker exec -it user-management-mysql mysql -uroot -p1234
 - axios
 - jwt-decode
 - react-router-dom
+- Bootstrap
