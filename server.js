@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mysql = require("mysql2");
+const authRoutes = require("./routes/auth");
+
+app.use("/api/auth", authRoutes);
 
 dotenv.config();
 

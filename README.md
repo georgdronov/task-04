@@ -32,3 +32,7 @@ taskkill /PID <PID> /F
 docker exec -it user-management-mysql mysql -uroot -p1234
 ```
 
+## Frontend
+- React
+- axios
+- jwt-decode
