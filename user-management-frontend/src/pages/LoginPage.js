@@ -7,8 +7,8 @@ const LoginPage = () => {
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
+    <div className="container">
+      <h1  className="text-center">Login Page</h1>
       <Login onLogin={handleLoginSuccess} />
     </div>
   );
