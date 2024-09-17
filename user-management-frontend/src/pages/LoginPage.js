@@ -7,9 +7,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="container">
-      <h1  className="text-center">Login Page</h1>
-      <Login onLogin={handleLoginSuccess} />
+    <div className="container d-flex justify-content-center align-items-center vh-100">
+      <div className="w-50 p-4 shadow-lg rounded">
+        <h1 className="text-center mb-4">Login</h1>
+        <Login onLogin={handleLoginSuccess} />
+      </div>
     </div>
   );
 };

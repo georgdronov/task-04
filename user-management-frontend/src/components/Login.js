@@ -14,7 +14,6 @@ const Login = ({ onLogin }) => {
         password,
       });
 
-      // Сохраняем JWT в localStorage
       localStorage.setItem("token", response.data.token);
       onLogin();
     } catch (err) {
@@ -24,28 +23,32 @@ const Login = ({ onLogin }) => {
 
   return (
     <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {/* <h2 className="text-center mb-4">Login</h2> */}
+      {error && <p className="text-danger text-center">{error}</p>}
       <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">Email:</label>
           <input
             type="email"
+            className="form-control"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">Password:</label>
           <input
             type="password"
+            className="form-control"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" className="btn btn-primary w-100">Login</button>
       </form>
     </div>
   );

@@ -53,28 +53,34 @@ const UserTable = () => {
   };
 
   return (
-    <div>
-      <div className="toolbar">
-        {/* maybe add SVG in buttons */}
-        <button onClick={handleBlockUsers}>Block</button>
-        <button onClick={handleUnblockUsers}>Unblock</button>
-        <button onClick={handleDeleteUsers}>Delete</button>
+    <div className="container mt-4">
+      <div className="mb-3 d-flex justify-content-end gap-2">
+        <button onClick={handleBlockUsers} className="btn btn-warning">
+          Block
+        </button>
+        <button onClick={handleUnblockUsers} className="btn btn-success">
+          Unblock
+        </button>
+        <button onClick={handleDeleteUsers} className="btn btn-danger">
+          Delete
+        </button>
       </div>
-      <table>
-        <thead>
+      <table className="table table-striped table-hover">
+        <thead className="table-dark">
           <tr>
-            <th>
+            <th scope="col">
               <input
                 type="checkbox"
                 checked={selectAll}
                 onChange={handleSelectAll}
               />
+              <label style={{ marginLeft: "12px" }}>Select all</label>
             </th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Registration Date</th>
-            <th>Last Login</th>
-            <th>Status</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Registration Date</th>
+            <th scope="col">Last Login</th>
+            <th scope="col">Status</th>
           </tr>
         </thead>
         <tbody>
