@@ -18,7 +18,7 @@ const DashboardPage = () => {
           setAuthenticated(true);
         }
       } catch (error) {
-        navigate("/auth");
+        navigate("/auth"); 
       } finally {
         setLoading(false);
       }
@@ -29,6 +29,10 @@ const DashboardPage = () => {
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (!authenticated) {
+    return <div>Redirecting to login...</div>; 
   }
 
   return (

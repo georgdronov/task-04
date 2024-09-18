@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import Login from "../components/Login";
-import Loading from "../components/Loading"; 
 import RegistrationForm from "../components/RegistrationForm";
-
+import Loading from "../components/Loading";
 import { isAuthenticated } from "../services/authService";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,12 +15,13 @@ const AuthPage = () => {
       try {
         const auth = await isAuthenticated();
         if (auth) {
+          console.log("User is authenticated. Redirecting to /dashboard");
           navigate("/dashboard");
         }
       } catch (error) {
         console.error("Failed to check authentication", error);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 

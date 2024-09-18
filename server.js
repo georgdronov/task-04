@@ -1,21 +1,34 @@
 const express = require("express");
-const cors = require("cors");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
 const db = require("./db");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/adminRoutes");
+const authenticateToken = require("./authMiddleware");
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
 app.use(express.json());
 
+app.get("/api/auth/check-auth", authenticateToken, (req, res) => {
+  res.json({ isAuthenticated: true });
+});
+
 app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes); 
-app.use("/api/admin", adminRoutes); 
+app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 db.getConnection()
   .then(() => console.log("Connected to the MySQL database"))

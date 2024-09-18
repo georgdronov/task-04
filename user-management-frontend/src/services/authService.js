@@ -1,38 +1,58 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:5000/api/auth';
+const API_URL = "http://localhost:5000/api/auth";
 
 export const register = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, { email, password });
-return response.data;
+    const response = await axios.post(`${API_URL}/register`, {
+      email,
+      password,
+    });
+    return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Registration failed');
+    throw new Error(error.response?.data?.message || "Registration failed");
   }
 };
 
-export const login = async (email, password) => {
+export const login = async (credentials) => {
   try {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
+    const response = await axios.post(
+      "http://localhost:5000/api/auth/login",
+      credentials
+    );
+    const token = response.data.token;
+    localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Login failed');
+    throw new Error("Login failed");
   }
 };
 
 export const isAuthenticated = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return false;
+
   try {
-    const response = await axios.get(`${API_URL}/check-auth`, { withCredentials: true });
+    const response = await axios.get(
+      "http://localhost:5000/api/auth/check-auth",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      }
+    );
+    console.log(response.data.isAuthenticated);
     return response.data.isAuthenticated;
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Failed to check authentication');
+    return false;
   }
 };
 
 export const logout = async () => {
   try {
     await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+
+    localStorage.removeItem("token");
   } catch (error) {
-    throw new Error(error.response?.data?.message || 'Logout failed');
+    throw new Error(error.response?.data?.message || "Logout failed");
   }
 };
