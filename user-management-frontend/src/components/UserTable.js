@@ -7,7 +7,6 @@ const UserTable = () => {
   const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
-    // Получаем данные пользователей с сервера
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/users");
@@ -76,7 +75,6 @@ const UserTable = () => {
               />
               <label style={{ marginLeft: "12px" }}>Select all</label>
             </th>
-            <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Registration Date</th>
             <th scope="col">Last Login</th>
@@ -93,7 +91,6 @@ const UserTable = () => {
                   onChange={() => handleSelectUser(user.id)}
                 />
               </td>
-              <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.registration_date}</td>
               <td>{user.last_login}</td>

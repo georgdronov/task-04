@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const db = require("./db");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
+app.use("/api", userRoutes);
 
 db.getConnection()
   .then(() => console.log("Connected to the MySQL database"))
