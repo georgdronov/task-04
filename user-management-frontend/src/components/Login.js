@@ -30,7 +30,7 @@ const Login = () => {
       } else if (err.response && err.response.status === 401) {
         setError("Invalid password");
       } else {
-        setError("An error occurred. Please try again.");
+        setError("You are blocked. Please contact your administrator.");
       }
     }
   };

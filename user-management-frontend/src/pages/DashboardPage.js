@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import UserTable from "../components/UserTable";
 import { isAuthenticated } from "../services/authService";
 import { useNavigate } from "react-router-dom";
+import Loading from "../components/Loading";
 
 const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
@@ -13,12 +14,12 @@ const DashboardPage = () => {
       try {
         const isAuth = await isAuthenticated();
         if (!isAuth) {
-          navigate("/auth"); 
+          navigate("/auth");
         } else {
           setAuthenticated(true);
         }
       } catch (error) {
-        navigate("/auth"); 
+        navigate("/auth");
       } finally {
         setLoading(false);
       }
@@ -28,11 +29,11 @@ const DashboardPage = () => {
   }, [navigate]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!authenticated) {
-    return <div>Redirecting to login...</div>; 
+    return <div>Redirecting to login...</div>;
   }
 
   return (

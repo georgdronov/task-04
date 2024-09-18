@@ -33,19 +33,25 @@ export const isAuthenticated = async () => {
   if (!token) return false;
 
   try {
-    const response = await axios.get(
-      "http://localhost:5000/api/auth/check-auth",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      }
-    );
-    console.log(response.data.isAuthenticated);
-    return response.data.isAuthenticated;
+    const response = await axios.get("http://localhost:5000/api/auth/check-auth", {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+
+    if (response.data.isAuthenticated) {
+      return true;
+    } else {
+      localStorage.removeItem("token");
+      return false;
+    }
   } catch (error) {
+    if (error.response?.status === 403 || error.response?.status === 401) {
+      localStorage.removeItem("token");
+    }
     return false;
   }
 };
+
 
 export const logout = async () => {
   try {
