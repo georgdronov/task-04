@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -12,12 +14,16 @@ const UserTable = () => {
         const response = await axios.get("http://localhost:5000/api/users");
         setUsers(response.data);
       } catch (error) {
-        console.error("Error fetching users:", error);
+        if (error.response && error.response.status === 403) {
+          navigate("/login");
+        } else {
+          console.error("Error fetching users:", error);
+        }
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [navigate]);
 
   const handleSelectUser = (userId) => {
     setSelectedUsers((prevSelected) =>
@@ -36,31 +42,37 @@ const UserTable = () => {
     setSelectAll(!selectAll);
   };
 
-  const handleBlockUsers = () => {
-    console.log("Block users:", selectedUsers);
-    //add logic later
-  };
-
-  const handleUnblockUsers = () => {
-    console.log("Unblock users:", selectedUsers);
-    //add logic later
-  };
-
-  const handleDeleteUsers = () => {
-    console.log("Delete users:", selectedUsers);
-    //add logic later
+  const handleAction = async (action) => {
+    try {
+      await axios.post(`http://localhost:5000/api/admin/${action}-users`, {
+        userIds: selectedUsers,
+      });
+      const response = await axios.get("http://localhost:5000/api/users");
+      setUsers(response.data);
+    } catch (error) {
+      console.error(`Error performing ${action} action:`, error);
+    }
   };
 
   return (
     <div className="container mt-4">
       <div className="mb-3 d-flex justify-content-end gap-2">
-        <button onClick={handleBlockUsers} className="btn btn-warning">
+        <button
+          onClick={() => handleAction("block")}
+          className="btn btn-warning"
+        >
           Block
         </button>
-        <button onClick={handleUnblockUsers} className="btn btn-success">
+        <button
+          onClick={() => handleAction("unblock")}
+          className="btn btn-success"
+        >
           Unblock
         </button>
-        <button onClick={handleDeleteUsers} className="btn btn-danger">
+        <button
+          onClick={() => handleAction("delete")}
+          className="btn btn-danger"
+        >
           Delete
         </button>
       </div>
