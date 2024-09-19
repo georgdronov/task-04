@@ -1,3 +1,5 @@
+version: '3.1'
+
 services:
   mysql:
     image: mysql:8.0
@@ -12,3 +14,16 @@ services:
       - "3306:3306"
     volumes:
       - ./mysql_data:/var/lib/mysql
+
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: task-04.railway.internal
+      DB_USER: root
+      DB_PASSWORD: 1234
+      DB_NAME: user_management
+      DB_PORT: 3306
