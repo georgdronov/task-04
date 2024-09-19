@@ -33,7 +33,7 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   port: parseInt(process.env.DB_PORT, 10),
   ssl: {
-    rejectUnauthorized: true,
+    rejectUnauthorized: false, 
   },
 });
 
