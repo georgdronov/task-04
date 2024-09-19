@@ -31,9 +31,9 @@ const pool = mysql.createPool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: parseInt(process.env.DB_PORT, 10),
+  port: parseInt(process.env.DB_PORT, 10) || 3306,  // Если порт не определён в .env, используйте 3306
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 10,  
   queueLimit: 0,
 });
 
@@ -41,14 +41,15 @@ pool
   .getConnection()
   .then((connection) => {
     console.log("Connected to the MySQL database");
-    connection.release(); 
+    connection.release();  
+
     app.listen(process.env.PORT || 5000, () => {
       console.log(`Server running on port ${process.env.PORT || 5000}`);
     });
   })
   .catch((err) => {
     console.error("Error connecting to the database:", err.message);
-    process.exit(1);
+    process.exit(1);  
   });
 
 app.use("/api/auth", authRoutes);
