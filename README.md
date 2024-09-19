@@ -1,6 +1,6 @@
 # task-04
 ### Deploy
-- Frontend **Vercel*: https://task-04-wine.vercel.app/login
+- Frontend **Vercel*: https://task-04-wine.vercel.app/
 - Backend **Railway*: 
 
 
