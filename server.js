@@ -6,7 +6,7 @@ const mysql = require("mysql2/promise");
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
-const adminRoutes = require("./routes/admin");
+const adminRoutes = require("./routes/adminRoutes");
 
 
 dotenv.config();
