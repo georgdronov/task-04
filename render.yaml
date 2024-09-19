@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: my-node-service
+    env: docker
+    plan: free
+    dockerfile_path: ./Dockerfile
+    build_command: ""
+    start_command: "node server.js"
+    port: 5000
+    env_vars:
+      - key: PORT
+        value: "5000"
+      - key: JWT_SECRET
+        value: "123456789"
+      - key: DB_HOST
+        value: "mysql"
+      - key: DB_USER
+        value: "root"
+      - key: DB_PASSWORD
+        value: "1234"
+      - key: DB_NAME
+        value: "user_management"
+      - key: DB_PORT
+        value: "3306"
+  - type: db
+    name: my-mysql-db
+    env: mysql
+    plan: free
+    mysql_version: "8.0"
+    env_vars:
+      - key: MYSQL_ROOT_PASSWORD
+        value: "1234"
+      - key: MYSQL_DATABASE
+        value: "user_management"
+      - key: MYSQL_USER
+        value: "root"
+      - key: MYSQL_PASSWORD
+        value: "1234"
