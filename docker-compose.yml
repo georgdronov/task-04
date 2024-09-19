@@ -22,7 +22,7 @@ services:
     depends_on:
       - mysql
     environment:
-      DB_HOST: task-04.railway.internal
+      DB_HOST: mysql
       DB_USER: root
       DB_PASSWORD: 1234
       DB_NAME: user_management
