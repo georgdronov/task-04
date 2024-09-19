@@ -14,11 +14,11 @@ const RegistrationForm = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/register",
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
+
+      const { token } = response.data;
+      localStorage.setItem("token", token);
 
       setSuccess("Registration successful");
       console.log("Registration successful");
