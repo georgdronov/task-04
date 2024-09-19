@@ -1,13 +1,9 @@
 # task-04
+### Deploy
+- Frontend **Vercel*: https://task-04-wine.vercel.app/login
+- Backend **Railway*: 
 
-Ok this is start
 
-Need:
-
-- Make front, tables with toolbar and chekboxes
-- Backend with authentication and database(SQL maybe)
-
-Tech:
 
 ## Backend
 
