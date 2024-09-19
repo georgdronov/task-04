@@ -4,6 +4,11 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
 
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+const adminRoutes = require("./routes/admin");
+
+
 dotenv.config();
 
 const app = express();
