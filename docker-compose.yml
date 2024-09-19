@@ -1,29 +1,13 @@
 version: '3.1'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: user-management-mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: QlLWWBePfzOJnsCxlKupcfcolrKIOvCi
-      MYSQL_DATABASE: railway
-      MYSQL_USER: root
-      MYSQL_PASSWORD: QlLWWBePfzOJnsCxlKupcfcolrKIOvCi
-    ports:
-      - "3306:3306"
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-
   app:
     build: .
     ports:
       - "5000:5000"
-    depends_on:
-      - mysql
     environment:
-      DB_HOST: mysql
-      DB_USER: root
-      DB_PASSWORD: QlLWWBePfzOJnsCxlKupcfcolrKIOvCi
-      DB_NAME: railway
-      DB_PORT: 3306
+      DB_HOST: dpg-crm54jtumphs73ehth30-a.oregon-postgres.render.com
+      DB_USER: itra_04_user
+      DB_PASSWORD: QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R
+      DB_NAME: itra_04
+      DB_PORT: 5432

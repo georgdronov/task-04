@@ -2,7 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const mysql = require("mysql2/promise");
+const { Pool } = require("pg");
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
@@ -26,15 +26,17 @@ app.get("/api/auth/check-auth", (req, res) => {
   res.json({ isAuthenticated: true });
 });
 
-mysql
-  .createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: parseInt(process.env.DB_PORT, 10), 
-  })
-  .then(() => console.log("Connected to the MySQL database"))
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: parseInt(process.env.DB_PORT, 10),
+});
+
+pool
+  .connect()
+  .then(() => console.log("Connected to the PostgreSQL database"))
   .catch((err) =>
     console.error("Error connecting to the database:", err.message)
   );
