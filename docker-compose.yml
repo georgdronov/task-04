@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.8'
 
 services:
   app:
@@ -6,8 +6,18 @@ services:
     ports:
       - "5000:5000"
     environment:
-      DB_HOST: dpg-crm54jtumphs73ehth30-a.oregon-postgres.render.com
-      DB_USER: itra_04_user
-      DB_PASSWORD: QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R
-      DB_NAME: itra_04
-      DB_PORT: 5432
+      - PORT=5000
+      - JWT_SECRET=123456789
+      - DB_HOST=dpg-crm54jtumphs73ehth30-a.oregon-postgres.render.com
+      - DB_USER=itra_04_user
+      - DB_PASSWORD=QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R
+      - DB_NAME=itra_04
+      - DB_PORT=5432
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -32,20 +32,24 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: parseInt(process.env.DB_PORT, 10),
+  ssl: {
+    rejectUnauthorized: true,
+  },
 });
 
 pool
   .connect()
-  .then(() => console.log("Connected to the PostgreSQL database"))
-  .catch((err) =>
-    console.error("Error connecting to the database:", err.message)
-  );
+  .then(() => {
+    console.log("Connected to the PostgreSQL database");
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`Server running on port ${process.env.PORT || 5000}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Error connecting to the database:", err.message);
+    process.exit(1);
+  });
 
 app.use("/api/auth", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});

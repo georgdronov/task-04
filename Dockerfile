@@ -1,13 +1,20 @@
-FROM node:18
+FROM postgres:latest
 
-WORKDIR /usr/src/app
+ENV PORT=5000
+ENV JWT_SECRET=123456789
+ENV DB_HOST=dpg-crm54jtumphs73ehth30-a.oregon-postgres.render.com
+ENV DB_USER=itra_04_user
+ENV DB_PASSWORD=QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R
+ENV DB_NAME=itra_04
+ENV DB_PORT=5432
 
-COPY package*.json ./
+ENV POSTGRES_USER=itra_04_user
+ENV POSTGRES_PASSWORD=QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R
+ENV POSTGRES_DB=itra_04
 
-RUN npm install
+RUN apt-get update && apt-get install -y postgresql-client
 
-COPY . .
+COPY server.js /app/server.js
 
-EXPOSE 5000
-
+WORKDIR /app
 CMD ["node", "server.js"]
