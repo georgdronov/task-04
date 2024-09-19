@@ -8,7 +8,6 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/adminRoutes");
 
-
 dotenv.config();
 
 const app = express();
@@ -33,6 +32,7 @@ mysql
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
+    port: process.env.DB_PORT, 
   })
   .then(() => console.log("Connected to the MySQL database"))
   .catch((err) =>
