@@ -13,26 +13,24 @@ services:
       - key: JWT_SECRET
         value: "123456789"
       - key: DB_HOST
-        value: "mysql"
+        value: "dpg-crm54jtumphs73ehth30-a.oregon-postgres.render.com"
       - key: DB_USER
-        value: "root"
+        value: "itra_04_user"
       - key: DB_PASSWORD
-        value: "1234"
+        value: "QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R"
       - key: DB_NAME
-        value: "user_management"
+        value: "itra_04"
       - key: DB_PORT
-        value: "3306"
+        value: "5432"
   - type: db
-    name: my-mysql-db
-    env: mysql
+    name: my-postgres-db
+    env: postgres
     plan: free
-    mysql_version: "8.0"
+    postgres_version: "14"
     env_vars:
-      - key: MYSQL_ROOT_PASSWORD
-        value: "1234"
-      - key: MYSQL_DATABASE
-        value: "user_management"
-      - key: MYSQL_USER
-        value: "root"
-      - key: MYSQL_PASSWORD
-        value: "1234"
+      - key: POSTGRES_USER
+        value: "itra_04_user"
+      - key: POSTGRES_PASSWORD
+        value: "QvpkoJGwcp3nr6IBJSJyI24yuFf4ZA7R"
+      - key: POSTGRES_DB
+        value: "itra_04"
