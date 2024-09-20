@@ -4,7 +4,7 @@ const apiUrl = "https://task04production.up.railway.app";
 
 export const register = async (email, password) => {
   try {
-    const response = await axios.post(`${apiUrl}/register`, {
+    const response = await axios.post(`${apiUrl}/api/auth/register`, {
       email,
       password,
     });
