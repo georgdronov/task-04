@@ -9,7 +9,9 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl = process.env.REACT_APP_API_URL || "/api/auth";
+  const apiUrl =
+    process.env.REACT_APP_API_URL ||
+    "https://task04production.up.railway.app/api/auth";
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -25,8 +27,8 @@ const RegistrationForm = () => {
       setSuccess("Registration successful");
       navigate("/dashboard");
     } catch (err) {
-      localStorage.removeItem("token"); // Удаляем токен при ошибке
-      if (err.response && err.response.status === 409) {
+      localStorage.removeItem("token");
+      if (err.response && err.response.status === 400) {
         setError("User already exists");
       } else {
         setError("Registration failed. Please try again later.");
