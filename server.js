@@ -8,6 +8,8 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/adminRoutes");
 
+const apiUrl = process.env.REACT_APP_API_URL;
+
 dotenv.config();
 
 const app = express();
@@ -22,7 +24,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.get("/api/auth/check-auth", (req, res) => {
+app.get(`${apiUrl}/api/auth/check-auth`, (req, res) => {
   res.json({ isAuthenticated: true });
 });
 
@@ -81,6 +83,6 @@ async function initializeServer() {
 
 initializeServer();
 
-app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes);
-app.use("/api/admin", adminRoutes);
+app.use(`${apiUrl}/api/auth`, authRoutes);
+app.use(`${apiUrl}/api`, userRoutes);
+app.use(`${apiUrl}/api/admin`, adminRoutes);

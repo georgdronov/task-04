@@ -8,14 +8,20 @@ const RegistrationForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const dotenv = require("dotenv");
+
+  dotenv.config();
+
+  const apiUrl = process.env.REACT_APP_API_URL;
+
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        { email, password }
-      );
+      const response = await axios.post(`${apiUrl}/api/auth/register`, {
+        email,
+        password,
+      });
 
       const { token } = response.data;
       localStorage.setItem("token", token);

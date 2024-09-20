@@ -1,10 +1,13 @@
 import axios from "axios";
+const dotenv = require("dotenv");
 
-const API_URL = "http://localhost:5000/api/auth";
+dotenv.config();
+
+const apiUrl = process.env.REACT_APP_apiUrl;
 
 export const register = async (email, password) => {
   try {
-    const response = await axios.post(`${API_URL}/register`, {
+    const response = await axios.post(`${apiUrl}/register`, {
       email,
       password,
     });
@@ -17,7 +20,7 @@ export const register = async (email, password) => {
 export const login = async (credentials) => {
   try {
     const response = await axios.post(
-      "http://localhost:5000/api/auth/login",
+      $`{apiUrl}/api/auth/login`,
       credentials
     );
     const token = response.data.token;
@@ -33,10 +36,13 @@ export const isAuthenticated = async () => {
   if (!token) return false;
 
   try {
-    const response = await axios.get("http://localhost:5000/api/auth/check-auth", {
-      headers: { Authorization: `Bearer ${token}` },
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `${apiUrl}/api/auth/check-auth`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      }
+    );
 
     if (response.data.isAuthenticated) {
       return true;
@@ -52,10 +58,9 @@ export const isAuthenticated = async () => {
   }
 };
 
-
 export const logout = async () => {
   try {
-    await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+    await axios.post(`${apiUrl}/logout`, {}, { withCredentials: true });
 
     localStorage.removeItem("token");
   } catch (error) {

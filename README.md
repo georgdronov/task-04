@@ -34,6 +34,11 @@ _Connect to DB in container:_
 docker exec -it user-management-mysql mysql -uroot -p1234
 ```
 
+_Connect to Railway DB:_
+```
+mysql -hautorack.proxy.rlwy.net -uroot -pMvXqbckWjgJwXznxgCtcGoCehDmPHapv --port 13225 --protocol=TCP railway
+```
+
 *If server.js not connected to data base use this:*
 ```
 docker stop user-management-mysql

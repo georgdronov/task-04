@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const ProtectedRoute = ({ element: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,14 +22,11 @@ const ProtectedRoute = ({ element: Component, ...rest }) => {
     }
 
     try {
-      const response = await axios.get(
-        "http://localhost:5000/api/auth/check-auth",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${apiUrl}/api/auth/check-auth`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       if (response.data.isAuthenticated) {
         setIsAuthenticated(true);

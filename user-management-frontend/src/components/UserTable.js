@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -11,7 +16,7 @@ const UserTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/users");
+        const response = await axios.get(`${apiUrl}/api/users`);
         setUsers(response.data);
       } catch (error) {
         if (error.response && error.response.status === 403) {
@@ -44,10 +49,10 @@ const UserTable = () => {
 
   const handleAction = async (action) => {
     try {
-      await axios.post(`http://localhost:5000/api/admin/${action}-users`, {
+      await axios.post(`${apiUrl}/api/admin/${action}-users`, {
         userIds: selectedUsers,
       });
-      const response = await axios.get("http://localhost:5000/api/users");
+      const response = await axios.get(`${apiUrl}/api/users`);
       setUsers(response.data);
     } catch (error) {
       console.error(`Error performing ${action} action:`, error);
