@@ -10,7 +10,9 @@ export const register = async (email, password) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Registration failed");
+    throw new Error(
+      error.response?.data?.message || "Registration failed. Please try again."
+    );
   }
 };
 
@@ -21,7 +23,9 @@ export const login = async (credentials) => {
     localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
-    throw new Error("Login failed");
+    throw new Error(
+      error.response?.data?.message || "Login failed. Please try again."
+    );
   }
 };
 
@@ -35,16 +39,9 @@ export const isAuthenticated = async () => {
       withCredentials: true,
     });
 
-    if (response.data.isAuthenticated) {
-      return true;
-    } else {
-      localStorage.removeItem("token");
-      return false;
-    }
+    return response.data.isAuthenticated;
   } catch (error) {
-    if (error.response?.status === 403 || error.response?.status === 401) {
-      localStorage.removeItem("token");
-    }
+    localStorage.removeItem("token");
     return false;
   }
 };
@@ -52,9 +49,9 @@ export const isAuthenticated = async () => {
 export const logout = async () => {
   try {
     await axios.post(`${apiUrl}/logout`, {}, { withCredentials: true });
-
-    localStorage.removeItem("token");
   } catch (error) {
-    throw new Error(error.response?.data?.message || "Logout failed");
+    console.error("Logout error:", error);
+  } finally {
+    localStorage.removeItem("token"); // Удаляем токен в любом случае
   }
 };

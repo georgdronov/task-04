@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
 
-const apiUrl = "/api/auth"; 
+const apiUrl = "/api/auth";
 
-const ProtectedRoute = ({ element: Component, ...rest }) => {
+const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -25,12 +25,7 @@ const ProtectedRoute = ({ element: Component, ...rest }) => {
         },
       });
 
-      if (response.data.isAuthenticated) {
-        setIsAuthenticated(true);
-      } else {
-        localStorage.removeItem("token");
-        setIsAuthenticated(false);
-      }
+      setIsAuthenticated(response.data.isAuthenticated);
     } catch (error) {
       localStorage.removeItem("token");
       setIsAuthenticated(false);

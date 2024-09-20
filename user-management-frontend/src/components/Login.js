@@ -23,12 +23,15 @@ const Login = () => {
 
       navigate("/dashboard");
     } catch (err) {
+      localStorage.removeItem("token"); // Удаляем токен при любой ошибке
       if (err.response && err.response.status === 404) {
         setError("User not found");
       } else if (err.response && err.response.status === 401) {
         setError("Invalid password");
-      } else {
+      } else if (err.response && err.response.status === 403) {
         setError("You are blocked. Please contact your administrator.");
+      } else {
+        setError("An error occurred. Please try again later.");
       }
     }
   };

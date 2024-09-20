@@ -23,11 +23,14 @@ const RegistrationForm = () => {
       localStorage.setItem("token", token);
 
       setSuccess("Registration successful");
-      console.log("Registration successful");
-
       navigate("/dashboard");
     } catch (err) {
-      setError("User already exists");
+      localStorage.removeItem("token"); // Удаляем токен при ошибке
+      if (err.response && err.response.status === 409) {
+        setError("User already exists");
+      } else {
+        setError("Registration failed. Please try again later.");
+      }
       console.error(
         "Error:",
         err.response ? err.response.data.message : err.message
