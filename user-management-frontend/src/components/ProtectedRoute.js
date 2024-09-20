@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
 
-const apiUrl = "";
+const apiUrl = "/api/auth"; 
 
 const ProtectedRoute = ({ element: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,7 +19,7 @@ const ProtectedRoute = ({ element: Component, ...rest }) => {
     }
 
     try {
-      const response = await axios.get(`${apiUrl}/api/auth/check-auth`, {
+      const response = await axios.get(`${apiUrl}/check-auth`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

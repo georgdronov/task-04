@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const apiUrl = "";
+const apiUrl = "/api";
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const UserTable = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${apiUrl}/api/users`);
+        const response = await axios.get(`${apiUrl}/users`);
         setUsers(response.data);
       } catch (error) {
         if (error.response && error.response.status === 403) {
@@ -46,10 +46,10 @@ const UserTable = () => {
 
   const handleAction = async (action) => {
     try {
-      await axios.post(`${apiUrl}/api/admin/${action}-users`, {
+      await axios.post(`${apiUrl}/admin/${action}-users`, {
         userIds: selectedUsers,
       });
-      const response = await axios.get(`${apiUrl}/api/users`);
+      const response = await axios.get(`${apiUrl}/users`);
       setUsers(response.data);
     } catch (error) {
       console.error(`Error performing ${action} action:`, error);

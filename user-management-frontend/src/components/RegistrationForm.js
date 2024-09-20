@@ -9,12 +9,12 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl = "";
+  const apiUrl = "/api/auth"; 
 
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${apiUrl}/api/auth/register`, {
+      const response = await axios.post(`${apiUrl}/register`, {
         email,
         password,
       });

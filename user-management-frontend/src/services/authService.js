@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const apiUrl = "";
+const apiUrl = "/api/auth";
 
 export const register = async (email, password) => {
   try {
-    const response = await axios.post(`${apiUrl}/api/auth/register`, {
+    const response = await axios.post(`${apiUrl}/register`, {
       email,
       password,
     });
@@ -16,7 +16,7 @@ export const register = async (email, password) => {
 
 export const login = async (credentials) => {
   try {
-    const response = await axios.post(`${apiUrl}/api/auth/login`, credentials);
+    const response = await axios.post(`${apiUrl}/login`, credentials);
     const token = response.data.token;
     localStorage.setItem("token", token);
     return response.data;
@@ -30,7 +30,7 @@ export const isAuthenticated = async () => {
   if (!token) return false;
 
   try {
-    const response = await axios.get(`${apiUrl}/api/auth/check-auth`, {
+    const response = await axios.get(`${apiUrl}/check-auth`, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
