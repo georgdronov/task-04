@@ -8,12 +8,8 @@ const RegistrationForm = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-  const dotenv = require("dotenv");
 
-  dotenv.config();
-
-  const apiUrl = process.env.REACT_APP_API_URL;
-
+  const apiUrl = "https://task-04-production.up.railway.app";
 
   const handleRegister = async (e) => {
     e.preventDefault();

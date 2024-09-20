@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const dotenv = require("dotenv");
 
-dotenv.config();
-
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = "https://task-04-production.up.railway.app";
 
 const Login = () => {
   const [email, setEmail] = useState("");

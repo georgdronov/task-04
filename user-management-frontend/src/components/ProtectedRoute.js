@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
-const dotenv = require("dotenv");
 
-dotenv.config();
-
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = "https://task-04-production.up.railway.app";
 
 const ProtectedRoute = ({ element: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

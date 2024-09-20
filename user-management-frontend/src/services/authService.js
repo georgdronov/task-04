@@ -1,9 +1,6 @@
 import axios from "axios";
-const dotenv = require("dotenv");
 
-dotenv.config();
-
-const apiUrl = process.env.REACT_APP_apiUrl;
+const apiUrl = "https://task-04-production.up.railway.app";
 
 export const register = async (email, password) => {
   try {
@@ -19,10 +16,7 @@ export const register = async (email, password) => {
 
 export const login = async (credentials) => {
   try {
-    const response = await axios.post(
-      $`{apiUrl}/api/auth/login`,
-      credentials
-    );
+    const response = await axios.post(`${apiUrl}/api/auth/login`, credentials);
     const token = response.data.token;
     localStorage.setItem("token", token);
     return response.data;
@@ -36,13 +30,10 @@ export const isAuthenticated = async () => {
   if (!token) return false;
 
   try {
-    const response = await axios.get(
-      `${apiUrl}/api/auth/check-auth`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      }
-    );
+    const response = await axios.get(`${apiUrl}/api/auth/check-auth`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
 
     if (response.data.isAuthenticated) {
       return true;
