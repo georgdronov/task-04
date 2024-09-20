@@ -22,7 +22,7 @@ router.post("/register", async (req, res) => {
       "INSERT INTO users (email, password, token) VALUES (?, ?, ?)",
       [email, hashedPassword, null]
     );
-    const userId = result[0].insertId; 
+    const userId = result[0].insertId;
     const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
+  console.log("Login request received:", req.body);
   try {
     const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
       email,
