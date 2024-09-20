@@ -9,7 +9,7 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl = "https://task-04-production.up.railway.app";
+  const apiUrl = "https://task04production.up.railway.app";
 
   const handleRegister = async (e) => {
     e.preventDefault();
