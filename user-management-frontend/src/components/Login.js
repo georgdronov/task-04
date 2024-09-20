@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const apiUrl = "https://task04production.up.railway.app";
+const apiUrl = "/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");

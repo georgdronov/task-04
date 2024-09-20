@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiUrl = "https://task04production.up.railway.app";
+const apiUrl = "/api";
 
 export const register = async (email, password) => {
   try {
