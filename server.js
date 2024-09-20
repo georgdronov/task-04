@@ -69,7 +69,7 @@ async function testDatabaseConnection() {
 
 async function initializeServer() {
   try {
-    await pool.getConnection();
+    const connection = await pool.getConnection();
     console.log("Connected to the MySQL database");
 
     await testDatabaseConnection();
@@ -84,3 +84,17 @@ async function initializeServer() {
 }
 
 initializeServer();
+
+app.use((err, req, res, next) => {
+  console.error("Unexpected error:", err);
+  res.status(500).json({ message: "Internal Server Error" });
+});
+
+app.use("/api/auth", (req, res, next) => {
+  res.on("finish", () => {
+    console.log(
+      `Request to ${req.url} completed with status ${res.statusCode}`
+    );
+  });
+  next();
+});
