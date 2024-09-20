@@ -8,8 +8,6 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/adminRoutes");
 
-const apiUrl = process.env.REACT_APP_API_URL;
-
 dotenv.config();
 
 const app = express();
@@ -24,9 +22,9 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.get(`${apiUrl}/api/auth/check-auth`, (req, res) => {
-  res.json({ isAuthenticated: true });
-});
+app.use(`${process.env.REACT_APP_API_URL}/api/auth`, authRoutes);
+app.use(`${process.env.REACT_APP_API_URL}/api`, userRoutes);
+app.use(`${process.env.REACT_APP_API_URL}/api/admin`, adminRoutes);
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -46,17 +44,6 @@ async function testDatabaseConnection() {
     console.log("Database test query result:", rows);
   } catch (err) {
     console.error("Error executing test query:", err.message);
-    console.error("Stack trace:", err.stack);
-  }
-}
-
-async function testMathOperation() {
-  try {
-    const [rows] = await pool.query("SELECT 1 + 1 AS result");
-    console.log("Math operation result:", rows[0].result);
-  } catch (err) {
-    console.error("Error executing math operation:", err.message);
-    console.error("Stack trace:", err.stack);
   }
 }
 
@@ -70,19 +57,10 @@ async function initializeServer() {
     app.listen(process.env.PORT || 5000, () => {
       console.log(`Server running on port ${process.env.PORT || 5000}`);
     });
-
-    setTimeout(async () => {
-      await testMathOperation();
-    }, 60000);
   } catch (err) {
     console.error("Error connecting to the database:", err.message);
-    console.error("Stack trace:", err.stack);
     process.exit(1);
   }
 }
 
 initializeServer();
-
-app.use(`${apiUrl}/api/auth`, authRoutes);
-app.use(`${apiUrl}/api`, userRoutes);
-app.use(`${apiUrl}/api/admin`, adminRoutes);
