@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN || "https://task-04-wine.vercel.app/",
+    origin: "https://task-04-wine.vercel.app", // Use exact origin
     credentials: true,
   })
 );
