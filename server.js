@@ -12,12 +12,24 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: process.env.CLIENT_ORIGIN,
-    credentials: true,
-  })
-);
+const allowedOrigins = [process.env.CLIENT_ORIGIN];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 app.use(cookieParser());
 app.use(express.json());
