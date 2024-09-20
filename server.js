@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_ORIGIN, 
+    origin: process.env.CLIENT_ORIGIN,
     credentials: true,
   })
 );
@@ -22,9 +22,9 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 
-app.use(`${process.env.REACT_APP_API_URL}/api/auth`, authRoutes);
-app.use(`${process.env.REACT_APP_API_URL}/api`, userRoutes);
-app.use(`${process.env.REACT_APP_API_URL}/api/admin`, adminRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
