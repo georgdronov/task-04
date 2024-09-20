@@ -9,7 +9,7 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl = "/api";
+  const apiUrl = "/api/auth";
 
   const handleRegister = async (e) => {
     e.preventDefault();
