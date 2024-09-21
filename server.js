@@ -11,12 +11,32 @@ const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
-app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes);
-app.use("/api/admin", adminRoutes);
+const allowedOrigins = [
+  process.env.CLIENT_ORIGIN,
+  "https://task-04-wine.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (allowedOrigins.includes(origin) || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+    methods: "GET, POST, PUT, DELETE, OPTIONS",
+    allowedHeaders: "Content-Type, Authorization, X-Requested-With",
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
+
+app.use("/api/auth", authRoutes);
+app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/register", (req, res) => {
   res.redirect("/api/auth/register");
@@ -24,33 +44,6 @@ app.get("/register", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.redirect("/api/auth/login");
-});
-
-const allowedOrigins = [
-  process.env.CLIENT_ORIGIN,
-  "https://task-04-wine.vercel.app",
-];
-
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-  }
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Requested-With"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
 });
 
 async function initializeServer() {
@@ -67,12 +60,8 @@ async function initializeServer() {
 
 async function testDatabaseConnection() {
   try {
-    try {
-      await db.query("SELECT 1 AS test_query");
-      console.log("Database connected successfully");
-    } catch (err) {
-      console.log(err);
-    }
+    await db.query("SELECT 1 AS test_query");
+    console.log("Database connected successfully");
   } catch (err) {
     console.error("Error executing test query:", err.message);
     throw err;
