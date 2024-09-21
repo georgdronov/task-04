@@ -55,7 +55,7 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  connectTimeout: 60000, 
+  connectTimeout: 60000,
 });
 
 async function testDatabaseConnection() {
@@ -68,17 +68,40 @@ async function testDatabaseConnection() {
 }
 
 async function initializeServer() {
-  try {
-    const connection = await pool.getConnection();
-    console.log("Connected to the MySQL database");
+  let retries = 3; 
+  let connected = false;
 
-    await testDatabaseConnection();
+  while (retries > 0 && !connected) {
+    try {
+      const connection = await pool.getConnection();
+      console.log("Connected to the MySQL database");
 
-    app.listen(process.env.PORT || 5000, () => {
-      console.log(`Server running on port ${process.env.PORT || 5000}`);
-    });
-  } catch (err) {
-    console.error("Error connecting to the database:", err.message);
+      await testDatabaseConnection();
+
+      app.listen(process.env.PORT || 5000, () => {
+        console.log(`Server running on port ${process.env.PORT || 5000}`);
+      });
+
+      connected = true; 
+    } catch (err) {
+      console.error("Error connecting to the database:", err.message);
+
+      if (err.code === "ETIMEDOUT") {
+        retries--; 
+        console.warn(
+          "Connection timed out, retrying...",
+          retries,
+          "attempts remaining"
+        );
+        await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+      } else {
+        process.exit(1);
+      }
+    }
+  }
+
+  if (!connected) {
+    console.error("Failed to connect to database after retries. Exiting.");
     process.exit(1);
   }
 }
