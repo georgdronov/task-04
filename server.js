@@ -50,58 +50,37 @@ const pool = mysql.createPool({
   host: "autorack.proxy.rlwy.net",
   user: "root",
   password: "MvXqbckWjgJwXznxgCtcGoCehDmPHapv",
-  database: "railway", 
+  database: "railway",
   port: 13225,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  connectTimeout: 60000,
-  multipleStatements: true,
+  connectTimeout: 120000,
 });
 
-async function testDatabaseConnection() {
+async function initializeServer() {
   try {
-    const [rows] = await pool.query("SELECT 1 AS test_query");
-    console.log("Database test query result:", rows);
+    await testDatabaseConnection();
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`Server running on port ${process.env.PORT || 5000}`);
+    });
   } catch (err) {
-    console.error("Error executing test query:", err.message);
+    console.error("Error initializing server:", err.message);
+    process.exit(1);
   }
 }
 
-async function initializeServer() {
-  let retries = 3;
-
-  while (retries > 0) {
-    try {
-      const connection = await pool.getConnection();
-      console.log("Connected to the MySQL database");
-
-      await testDatabaseConnection();
-
-      app.listen(process.env.PORT || 5000, () => {
-        console.log(`Server running on port ${process.env.PORT || 5000}`);
-      });
-
-      return;
-    } catch (err) {
-      console.error("Error connecting to the database:", err.message);
-
-      if (err.code === "ETIMEDOUT") {
-        retries--;
-        console.warn(
-          "Connection timed out, retrying...",
-          retries,
-          "attempts remaining"
-        );
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-      } else {
-        process.exit(1);
-      }
-    }
+async function testDatabaseConnection() {
+  try {
+    const connection = await pool.getConnection();
+    console.log("Connected to the MySQL database");
+    await connection.query("SELECT 1 AS test_query");
+    console.log("Database test query executed successfully");
+    connection.release();
+  } catch (err) {
+    console.error("Error executing test query:", err.message);
+    throw err;
   }
-
-  console.error("Failed to connect to database after retries. Exiting.");
-  process.exit(1);
 }
 
 initializeServer();
@@ -110,3 +89,4 @@ app.use((err, req, res, next) => {
   console.error("Unexpected error:", err.message);
   res.status(500).json({ message: "Internal Server Error" });
 });
+
