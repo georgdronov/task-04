@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UserTable from "../components/UserTable";
-import { isAuthenticated } from "../services/authService";
+import { isAuthenticated } from "../services/authService"; // Keep this
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
 

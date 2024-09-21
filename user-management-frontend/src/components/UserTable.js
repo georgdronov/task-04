@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const apiUrl = process.env.REACT_APP_API_URL + "/api";
-console.log("API URL:", apiUrl); 
+console.log("API URL:", apiUrl);
 
 const UserTable = () => {
   const [users, setUsers] = useState([]);
@@ -15,13 +15,10 @@ const UserTable = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(`${apiUrl}/users`);
+        console.log("Fetched users:", response.data); // Log the fetched users
         setUsers(response.data);
       } catch (error) {
-        if (error.response && error.response.status === 403) {
-          navigate("/login");
-        } else {
-          console.error("Error fetching users:", error);
-        }
+        console.error("Error fetching users:", error);
       }
     };
 
