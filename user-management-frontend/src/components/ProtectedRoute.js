@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "./Loading";
 
-const apiUrl = "/api/auth";
+const apiUrl = process.env.REACT_APP_API_URL + "/api/auth";
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
