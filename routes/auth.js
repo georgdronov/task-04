@@ -21,14 +21,23 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const token = jwt.sign({ userId: users.insertId }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
     const [result] = await db.query(
-      "INSERT INTO users (email, password, token) VALUES (?, ?, ?)",
-      [email, hashedPassword, token]
+      "INSERT INTO users (email, password) VALUES (?, ?)",
+      [email, hashedPassword]
     );
+
+    const token = jwt.sign(
+      { userId: result.insertId },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    await db.query("UPDATE users SET token = ? WHERE id = ?", [
+      token,
+      result.insertId,
+    ]);
 
     console.log("User registered successfully:", {
       userId: result.insertId,
