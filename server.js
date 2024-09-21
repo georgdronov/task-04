@@ -2,15 +2,22 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const mysql = require("mysql2/promise");
+const db = require("./db");
+dotenv.config();
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const adminRoutes = require("./routes/adminRoutes");
 
-dotenv.config();
-
 const app = express();
+
+app.use("/api/auth", authRoutes);
+app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
+
+app.use(cookieParser());
+app.use(express.json());
+
 
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN,
@@ -39,23 +46,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cookieParser());
-app.use(express.json());
+app.get("/register", (req, res) => {
+  res.redirect("/api/auth/register");
+});
 
-app.use("/api/auth", authRoutes);
-app.use("/api", userRoutes);
-app.use("/api/admin", adminRoutes);
-
-const pool = mysql.createPool({
-  host: "autorack.proxy.rlwy.net",
-  user: "root",
-  password: "MvXqbckWjgJwXznxgCtcGoCehDmPHapv",
-  database: "railway",
-  port: 13225,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  connectTimeout: 120000,
+app.get("/login", (req, res) => {
+  res.redirect("/api/auth/login");
 });
 
 async function initializeServer() {
@@ -72,11 +68,12 @@ async function initializeServer() {
 
 async function testDatabaseConnection() {
   try {
-    const connection = await pool.getConnection();
-    console.log("Connected to the MySQL database");
-    await connection.query("SELECT 1 AS test_query");
-    console.log("Database test query executed successfully");
-    connection.release();
+    try {
+      await db.query("SELECT 1 AS test_query");
+      console.log("Database connected successfully");
+    } catch (err) {
+      console.log(err);
+    }
   } catch (err) {
     console.error("Error executing test query:", err.message);
     throw err;
@@ -89,4 +86,3 @@ app.use((err, req, res, next) => {
   console.error("Unexpected error:", err.message);
   res.status(500).json({ message: "Internal Server Error" });
 });
-
