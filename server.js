@@ -68,10 +68,9 @@ async function testDatabaseConnection() {
 }
 
 async function initializeServer() {
-  let retries = 3; 
-  let connected = false;
+  let retries = 3;
 
-  while (retries > 0 && !connected) {
+  while (retries > 0) {
     try {
       const connection = await pool.getConnection();
       console.log("Connected to the MySQL database");
@@ -82,42 +81,31 @@ async function initializeServer() {
         console.log(`Server running on port ${process.env.PORT || 5000}`);
       });
 
-      connected = true; 
+      return;
     } catch (err) {
       console.error("Error connecting to the database:", err.message);
 
       if (err.code === "ETIMEDOUT") {
-        retries--; 
+        retries--;
         console.warn(
           "Connection timed out, retrying...",
           retries,
           "attempts remaining"
         );
-        await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait 5 seconds before retrying
+        await new Promise((resolve) => setTimeout(resolve, 5000));
       } else {
         process.exit(1);
       }
     }
   }
 
-  if (!connected) {
-    console.error("Failed to connect to database after retries. Exiting.");
-    process.exit(1);
-  }
+  console.error("Failed to connect to database after retries. Exiting.");
+  process.exit(1);
 }
 
 initializeServer();
 
 app.use((err, req, res, next) => {
-  console.error("Unexpected error:", err);
+  console.error("Unexpected error:", err.message);
   res.status(500).json({ message: "Internal Server Error" });
-});
-
-app.use("/api/auth", (req, res, next) => {
-  res.on("finish", () => {
-    console.log(
-      `Request to ${req.url} completed with status ${res.statusCode}`
-    );
-  });
-  next();
 });
