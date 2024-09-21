@@ -14,6 +14,7 @@ const app = express();
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN,
   "https://task-04-wine.vercel.app",
+  "http://localhost:3000",
 ];
 
 app.use(
