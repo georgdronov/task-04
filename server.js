@@ -67,12 +67,25 @@ async function testDatabaseConnection() {
   }
 }
 
+async function periodicDatabaseTest() {
+  try {
+    setInterval(async () => {
+      const [rows] = await pool.query("SELECT 1 + 1 AS solution");
+      console.log("Periodic DB test result:", rows[0].solution);
+    }, 60000); 
+  } catch (err) {
+    console.error("Error executing periodic test query:", err.message);
+  }
+}
+
 async function initializeServer() {
   try {
     const connection = await pool.getConnection();
     console.log("Connected to the MySQL database");
 
     await testDatabaseConnection();
+
+    periodicDatabaseTest();
 
     app.listen(process.env.PORT || 5000, () => {
       console.log(`Server running on port ${process.env.PORT || 5000}`);
