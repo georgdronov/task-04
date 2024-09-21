@@ -15,8 +15,12 @@ const UserTable = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(`${apiUrl}/users`);
-        console.log("Fetched users:", response.data); // Log the fetched users
-        setUsers(response.data);
+        console.log("Fetched users:", response.data);
+        if (Array.isArray(response.data)) {
+          setUsers(response.data);
+        } else {
+          console.error("Unexpected data structure:", response.data);
+        }
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -49,6 +53,8 @@ const UserTable = () => {
       });
       const response = await axios.get(`${apiUrl}/users`);
       setUsers(response.data);
+      setSelectedUsers([]); 
+      setSelectAll(false); 
     } catch (error) {
       console.error(`Error performing ${action} action:`, error);
     }
@@ -94,21 +100,29 @@ const UserTable = () => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedUsers.includes(user.id)}
-                  onChange={() => handleSelectUser(user.id)}
-                />
+          {Array.isArray(users) && users.length > 0 ? (
+            users.map((user) => (
+              <tr key={user.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedUsers.includes(user.id)}
+                    onChange={() => handleSelectUser(user.id)}
+                  />
+                </td>
+                <td>{user.email}</td>
+                <td>{user.registration_date}</td>
+                <td>{user.last_login}</td>
+                <td>{user.status}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center">
+                No users found.
               </td>
-              <td>{user.email}</td>
-              <td>{user.registration_date}</td>
-              <td>{user.last_login}</td>
-              <td>{user.status}</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
