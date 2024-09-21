@@ -9,7 +9,7 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl = process.env.REACT_APP_API_URL + '/api/auth';
+  const apiUrl = process.env.REACT_APP_API_URL + "/api/auth";
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -22,8 +22,15 @@ const RegistrationForm = () => {
       const { token } = response.data;
       localStorage.setItem("token", token);
 
-      setSuccess("Registration successful");
-      navigate("/dashboard");
+      // Теперь проверим статус пользователя
+      const authResponse = await axios.get(`${apiUrl}/check-auth`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (authResponse.data.isAuthenticated) {
+        setSuccess("Registration successful");
+        navigate("/dashboard");
+      }
     } catch (err) {
       localStorage.removeItem("token");
       if (err.response && err.response.status === 400) {
