@@ -8,7 +8,7 @@ const authenticateTokenAndCheckStatus = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
 
-  if (token == null) return res.sendStatus(401);
+  if (!token) return res.sendStatus(401); 
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,21 +17,23 @@ const authenticateTokenAndCheckStatus = async (req, res, next) => {
       decoded.userId,
     ]);
 
-    if (users.length === 0) return res.sendStatus(403);
-
+    if (users.length === 0) return res.sendStatus(403); 
     const user = users[0];
 
     if (user.status === "blocked") {
       return res.status(403).json({ message: "User is blocked" });
     } else if (user.status === "deleted") {
-      return res.status(401).json({ message: "User is deleted" });
+      return res.status(403).json({ message: "User is deleted" });
     }
 
     req.user = user;
     next();
   } catch (error) {
     console.error(error);
-    res.sendStatus(403);
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.sendStatus(401); 
+    }
+    res.sendStatus(403); 
   }
 };
 
