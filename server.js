@@ -47,15 +47,16 @@ app.use("/api", userRoutes);
 app.use("/api/admin", adminRoutes);
 
 const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: parseInt(process.env.DB_PORT, 10) || 3306,
+  host: "autorack.proxy.rlwy.net",
+  user: "root",
+  password: "MvXqbckWjgJwXznxgCtcGoCehDmPHapv",
+  database: "railway", 
+  port: 13225,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
   connectTimeout: 60000,
+  multipleStatements: true,
 });
 
 async function testDatabaseConnection() {
@@ -84,7 +85,6 @@ async function initializeServer() {
       return;
     } catch (err) {
       console.error("Error connecting to the database:", err.message);
-      console.error("Error details:", err); // Log additional details for debugging
 
       if (err.code === "ETIMEDOUT") {
         retries--;
