@@ -13,12 +13,14 @@ const DashboardPage = () => {
     const checkAuth = async () => {
       try {
         const isAuth = await isAuthenticated();
+        console.log("Is authenticated:", isAuth);
         if (!isAuth) {
           navigate("/auth");
         } else {
           setAuthenticated(true);
         }
       } catch (error) {
+        console.error("Authentication check error:", error);
         navigate("/auth");
       } finally {
         setLoading(false);
