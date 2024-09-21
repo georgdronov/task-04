@@ -84,6 +84,7 @@ async function initializeServer() {
       return;
     } catch (err) {
       console.error("Error connecting to the database:", err.message);
+      console.error("Error details:", err); // Log additional details for debugging
 
       if (err.code === "ETIMEDOUT") {
         retries--;
