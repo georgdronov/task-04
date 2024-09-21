@@ -1,73 +1,75 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const db = require("../db");
-const router = express.Router();
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const db = require("./db");
+dotenv.config();
 
-router.post("/register", async (req, res) => {
-  const { email, password } = req.body;
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+const adminRoutes = require("./routes/adminRoutes");
 
-  try {
-    const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
+const app = express();
 
-    if (users.length > 0) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+app.use(cookieParser());
+app.use(express.json());
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+const allowedOrigins = [
+  process.env.CLIENT_ORIGIN,
+  "https://task-04-wine.vercel.app",
+];
 
-    const token = jwt.sign({ userId: users.insertId }, process.env.JWT_SECRET, {
-      expiresIn: "1h", // 1 hour live time
-    });
-
-    await db.query(
-      "INSERT INTO users (email, password, token) VALUES (?, ?, ?)",
-      [email, hashedPassword, token]
-    );
-
-    res.status(201).json({ message: "User registered successfully", token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
   }
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
 });
 
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+app.use("/api/auth", authRoutes);
+app.use("/api", userRoutes);
+app.use("/api/admin", adminRoutes);
 
+async function initializeServer() {
   try {
-    const [users] = await db.query("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
-
-    if (users.length === 0) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    const user = users[0];
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    if (user.status === "blocked" || user.status === "deleted") {
-      return res.status(403).json({ message: "Account is blocked or deleted" });
-    }
-
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+    await testDatabaseConnection();
+    app.listen(process.env.PORT || 5000, () => {
+      console.log(`Server running on port ${process.env.PORT || 5000}`);
     });
-
-    await db.query("UPDATE users SET token = ? WHERE id = ?", [token, user.id]);
-
-    res.status(200).json({ message: "Login successful", token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    console.error("Error initializing server:", err.message);
+    process.exit(1);
   }
-});
+}
 
-module.exports = router;
+async function testDatabaseConnection() {
+  try {
+    await db.query("SELECT 1 AS test_query");
+    console.log("Database connected successfully");
+  } catch (err) {
+    console.error("Error executing test query:", err.message);
+    throw err;
+  }
+}
+
+initializeServer();
+
+app.use((err, req, res, next) => {
+  console.error("Unexpected error:", err.message);
+  res.status(500).json({ message: "Internal Server Error" });
+});

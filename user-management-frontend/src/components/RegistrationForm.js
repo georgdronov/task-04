@@ -9,9 +9,7 @@ const RegistrationForm = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const apiUrl =
-    process.env.REACT_APP_API_URL ||
-    "https://task04production.up.railway.app/api/auth";
+  const apiUrl = process.env.REACT_APP_API_URL + '/api/auth';
 
   const handleRegister = async (e) => {
     e.preventDefault();

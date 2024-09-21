@@ -18,6 +18,13 @@ app.use("/api/admin", adminRoutes);
 app.use(cookieParser());
 app.use(express.json());
 
+app.get("/register", (req, res) => {
+  res.redirect("/api/auth/register");
+});
+
+app.get("/login", (req, res) => {
+  res.redirect("/api/auth/login");
+});
 
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN,
@@ -44,14 +51,6 @@ app.use((req, res, next) => {
   }
 
   next();
-});
-
-app.get("/register", (req, res) => {
-  res.redirect("/api/auth/register");
-});
-
-app.get("/login", (req, res) => {
-  res.redirect("/api/auth/login");
 });
 
 async function initializeServer() {

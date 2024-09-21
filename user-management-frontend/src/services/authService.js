@@ -52,6 +52,6 @@ export const logout = async () => {
   } catch (error) {
     console.error("Logout error:", error);
   } finally {
-    localStorage.removeItem("token"); // Удаляем токен в любом случае
+    localStorage.removeItem("token"); 
   }
 };
