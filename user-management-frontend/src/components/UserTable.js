@@ -9,7 +9,7 @@ const UserTable = () => {
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [previousUsers, setPreviousUsers] = useState([]); // Для хранения предыдущих данных
+  const [previousUsers, setPreviousUsers] = useState([]); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +20,6 @@ const UserTable = () => {
 
         if (Array.isArray(response.data)) {
           setUsers(response.data);
-
           setPreviousUsers(response.data);
         } else {
           console.error("Unexpected data structure:", response.data);
@@ -51,6 +50,12 @@ const UserTable = () => {
   };
 
   const handleAction = async (action) => {
+    let usersToLog = [];
+
+    if (action === "delete") {
+      usersToLog = users.filter((user) => selectedUsers.includes(user.id));
+    }
+
     try {
       await axios.post(`${apiUrl}/admin/${action}-users`, {
         userIds: selectedUsers,
@@ -62,14 +67,23 @@ const UserTable = () => {
       setSelectAll(false);
 
       console.log(`Action: ${action} performed.`);
-      response.data.forEach((newUser) => {
-        const prevUser = previousUsers.find((user) => user.id === newUser.id);
-        if (prevUser && prevUser.status !== newUser.status) {
+
+      if (action === "delete") {
+        usersToLog.forEach((deletedUser) => {
           console.log(
-            `User Email: ${newUser.email}, Status: ${newUser.status}, Token: ${newUser.token}`
+            `Deleted User Email: ${deletedUser.email}, Status: ${deletedUser.status}, Token: ${deletedUser.token}`
           );
-        }
-      });
+        });
+      } else {
+        response.data.forEach((newUser) => {
+          const prevUser = previousUsers.find((user) => user.id === newUser.id);
+          if (prevUser && prevUser.status !== newUser.status) {
+            console.log(
+              `User Email: ${newUser.email}, Status: ${newUser.status}, Token: ${newUser.token}`
+            );
+          }
+        });
+      }
 
       setPreviousUsers(response.data);
     } catch (error) {
