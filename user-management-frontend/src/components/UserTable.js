@@ -9,8 +9,10 @@ const UserTable = () => {
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-  const [previousUsers, setPreviousUsers] = useState([]); 
+  const [previousUsers, setPreviousUsers] = useState([]);
   const navigate = useNavigate();
+
+  const localToken = localStorage.getItem("token");
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -31,6 +33,18 @@ const UserTable = () => {
 
     fetchUsers();
   }, [navigate]);
+
+  useEffect(() => {
+    users.forEach((user) => {
+      if (
+        (user.status === "deleted" || user.status === "blocked") &&
+        user.token === localToken
+      ) {
+        console.log("Redirecting deleted or blocked user with matching token");
+        navigate("/login");
+      }
+    });
+  }, [users, localToken, navigate]);
 
   const handleSelectUser = (userId) => {
     setSelectedUsers((prevSelected) =>
