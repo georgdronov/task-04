@@ -17,8 +17,6 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-// neet to test => trobles with cors
-
 app.use(
   cors({
     origin: (origin, callback) => {
