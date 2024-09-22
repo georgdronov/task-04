@@ -9,6 +9,7 @@ const UserTable = () => {
   const [users, setUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
+  const [previousUsers, setPreviousUsers] = useState([]); // Для хранения предыдущих данных
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,8 +17,11 @@ const UserTable = () => {
       try {
         const response = await axios.get(`${apiUrl}/users`);
         console.log("Fetched users:", response.data);
+
         if (Array.isArray(response.data)) {
           setUsers(response.data);
+
+          setPreviousUsers(response.data);
         } else {
           console.error("Unexpected data structure:", response.data);
         }
@@ -51,10 +55,23 @@ const UserTable = () => {
       await axios.post(`${apiUrl}/admin/${action}-users`, {
         userIds: selectedUsers,
       });
+
       const response = await axios.get(`${apiUrl}/users`);
       setUsers(response.data);
-      setSelectedUsers([]); 
-      setSelectAll(false); 
+      setSelectedUsers([]);
+      setSelectAll(false);
+
+      console.log(`Action: ${action} performed.`);
+      response.data.forEach((newUser) => {
+        const prevUser = previousUsers.find((user) => user.id === newUser.id);
+        if (prevUser && prevUser.status !== newUser.status) {
+          console.log(
+            `User Email: ${newUser.email}, Status: ${newUser.status}, Token: ${newUser.token}`
+          );
+        }
+      });
+
+      setPreviousUsers(response.data);
     } catch (error) {
       console.error(`Error performing ${action} action:`, error);
     }
